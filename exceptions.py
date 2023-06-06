@@ -38,3 +38,21 @@ class EmptyListException(Exception):
     """Если список на входу пустой."""
 
     pass
+
+
+class APIAnswerError(Exception):
+    """Сбой в получении ответа от API."""
+
+    pass
+
+
+class NoCurrentDateKeyError(Exception):
+    """В ответе API тсутствует ключ current_date."""
+
+    pass
+
+
+class NoStatusKeyError(Exception):
+    """В ответе от API отсутствует ключ status."""
+
+    pass
