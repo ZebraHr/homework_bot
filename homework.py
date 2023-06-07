@@ -70,12 +70,10 @@ def get_api_answer(timestamp):
         homework_statuses = requests.get(ENDPOINT,
                                          headers=HEADERS, params=payload)
     except Exception as error:
-        message = f'Сбой в получении ответа от API: {error}'
-        raise APIAnswerError(message)
+        raise APIAnswerError(f'Сбой в получении ответа от API: {error}')
     if homework_statuses.status_code != HTTPStatus.OK:
-        message = (f'API {ENDPOINT} недоступен, '
-                   f'код ошибки {homework_statuses.status_code}')
-        raise StatusCodeNot200(message)
+        raise StatusCodeNot200(f'API {ENDPOINT} недоступен, '
+                               f'код ошибки {homework_statuses.status_code}')
     try:
         return homework_statuses.json()
     except Exception as error:
@@ -85,19 +83,14 @@ def get_api_answer(timestamp):
 def check_response(response):
     """Проверяет валидность ответа API."""
     if not isinstance(response, dict):
-        message = 'Ответ от API не является словарем!'
-        logger.error(message)
-        raise TypeError(message)
+        raise TypeError('Ответ от API не является словарем!')
     if 'homeworks' not in response:
-        message = 'Отсутствует ключ homeworks!'
-        raise NoHomeworksKeyError(message)
+        raise NoHomeworksKeyError('Отсутствует ключ homeworks!')
     if 'current_date' not in response:
-        message = 'Отсутствует ключ current_date!'
-        raise NoCurrentDateKeyError
+        raise NoCurrentDateKeyError('Отсутствует ключ current_date!')
     homeworks = response.get('homeworks')
     if not isinstance(homeworks, list):
-        message = 'Значение ключа homeworks приходит не в виде списка!'
-        raise TypeError(message)
+        raise TypeError('Значение ключа homeworks приходит не в виде списка!')
     return homeworks
 
 
@@ -106,14 +99,11 @@ def parse_status(homework):
     homework_name = homework.get('homework_name')
     homework_status = homework.get('status')
     if 'homework_name' not in homework:
-        message = 'Отсутствует ключ homework_name!'
-        raise NoHomeworksNameError(message)
+        raise NoHomeworksNameError('Отсутствует ключ homework_name!')
     if 'status' not in homework:
-        message = 'Отсутствует ключ status!'
-        raise NoStatusKeyError
+        raise NoStatusKeyError('Отсутствует ключ status!')
     if homework_status not in HOMEWORK_VERDICTS:
-        message = 'Значение ключа status отличается от ожидаемого!'
-        raise UnknownStatusError(message)
+        raise UnknownStatusError('Неожижанное значение ключа status')
     verdict = HOMEWORK_VERDICTS.get(homework_status)
     return f'Изменился статус проверки работы "{homework_name}". {verdict}'
 
